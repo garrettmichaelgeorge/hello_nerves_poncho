@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "flanders-gateway-python"
+version = "0.4.2"
+description = "Contains the Python algorithms used to detect if the Flanders normally on and off test are successful"
+authors = ["Katie Rouse <katie@verypossible.com>", "Daniel Fudge <daniel.f@verypossible.com>"]
+
+[tool.poetry.scripts]
+ref = 'src.cli.cli:app'
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.12"
+numpy = "^1.23.1"
+
+[tool.poetry.dev-dependencies]
+black = "^22.10.0"
+bandit = "^1.7.0"
+flake8 = "^5.0.0"
+flake8-eradicate = "^1.4.0"
+isort = "^5.10.0"
+matplotlib = "^3.6.0"
+mypy = "^0.982"
+pandas = "^1.5.1"
+pep8-naming = "^0.13.0"
+pre-commit = "^2.20.0"
+pytest = "^7.2.0"
+pytest-cov = "^4.0.0"
+pytest-mock = "^3.6.1"
+scikit-learn = "^1.1.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

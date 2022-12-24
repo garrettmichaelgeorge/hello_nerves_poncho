@@ -19,6 +19,7 @@ with pkgs; let
     automake
     bc
     cmake
+    coreutils-prefixed
     curl
     fwup
     gcc
@@ -28,8 +29,8 @@ with pkgs; let
     nodejs
     openssl
     pkg-config
+    my-python
     python-with-my-packages
-    python38
     rebar3
     squashfsTools
     unzip
@@ -41,6 +42,7 @@ with pkgs; let
   devPackages = [
     nixpkgs-fmt
     fswatch
+    rnix-lsp
   ];
   #wxGTK28 has reached end of life on linux
   buildInputs =

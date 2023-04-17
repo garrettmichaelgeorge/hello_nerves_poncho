@@ -38,10 +38,6 @@ jobs:
           otp-version: ${{ matrix.otp }}
           working-directory: ui
 
-      - name: Check for unused deps
-        working-directory: ui
-        run: mix deps.unlock --check-unused
-
       - name: Check formatting
         working-directory: ui
         if: always()

@@ -1,0 +1,89 @@
+name: Pull Request
+
+on:
+  pull_request:
+
+jobs:
+  test-ui:
+    name: Test UI
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        shell: bash
+    env:
+      MIX_ENV: test
+      elixir-version: "1.14.4"
+      otp-version: "25.3"
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
+
+      - name: Compile UI
+        uses: ./.github/actions/elixir-setup
+        with:
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
+          working-directory: ui
+
+      - name: Check formatting (UI)
+        working-directory: ui
+        if: always()
+        run: mix format --check-formatted
+
+      - name: Check formatting (UI)
+        working-directory: ui
+        if: always()
+        run: mix credo suggest
+
+      - name: Run tests (UI)
+        working-directory: ui
+        if: always()
+        run: mix test --warnings-as-errors
+
+  test-firmware:
+    name: Test Firmware
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        shell: bash
+    env:
+      MIX_ENV: test
+      elixir-version: "1.14.4"
+      otp-version: "25.3"
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
+
+      - name: Compile Firmware
+        uses: ./.github/actions/elixir-setup
+        with:
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
+          working-directory: firmware
+
+      - name: Check formatting (Firmware)
+        working-directory: firmware
+        if: always()
+        run: mix format --check-formatted
+
+      - name: Check formatting (Firmware)
+        working-directory: firmware
+        if: always()
+        run: mix credo suggest
+
+      - name: Run tests (Firmware)
+        working-directory: firmware
+        if: always()
+        run: mix test --warnings-as-errors

@@ -36,6 +36,11 @@ jobs:
         if: always()
         run: mix format --check-formatted
 
+      - name: Check formatting (UI)
+        working-directory: ui
+        if: always()
+        run: mix credo suggest
+
       - name: Run tests (UI)
         working-directory: ui
         if: always()

@@ -1,4 +1,5 @@
 defmodule UiWeb.ModalComponent do
+  @moduledoc false
   use UiWeb, :live_component
 
   @impl true

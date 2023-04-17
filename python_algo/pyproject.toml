@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "flanders-gateway-python"
+name = "python-algo"
 version = "0.4.2"
-description = "Contains the Python algorithms used to detect if the Flanders normally on and off test are successful"
-authors = ["Katie Rouse <katie@verypossible.com>", "Daniel Fudge <daniel.f@verypossible.com>"]
+description = "Contains a generic algorithm that returns a result"
+authors = ["Garrett George <garrett@verypossible.com>"]
 
 [tool.poetry.scripts]
 ref = 'src.cli.cli:app'

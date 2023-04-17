@@ -1,0 +1,53 @@
+name: Test
+
+on:
+  pull_request:
+
+jobs:
+  test-ui:
+    name: Test UI
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        elixir: ["1.14.4"]
+        otp: ["25.0.2"]
+    defaults:
+      run:
+        shell: bash
+    env:
+      MIX_ENV: test
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ matrix.elixir }}
+          otp-version: ${{ matrix.otp }}
+
+      # - name: Install system tools
+      #   run: |
+      #     sudo apt update
+      #     sudo apt install -y \
+      #       libmnl-dev
+
+      - name: Compile UI
+        uses: ./.github/actions/elixir-setup
+        with:
+          elixir-version: ${{ matrix.elixir }}
+          otp-version: ${{ matrix.otp }}
+          working-directory: ui
+
+      - name: Check for unused deps
+        working-directory: ui
+        run: mix deps.unlock --check-unused
+
+      - name: Check formatting
+        working-directory: ui
+        if: always()
+        run: mix format --check-formatted
+
+      - name: Run tests
+        working-directory: ui
+        if: always()
+        run: mix test --warnings-as-errors

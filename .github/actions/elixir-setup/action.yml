@@ -1,0 +1,112 @@
+name: Set Up Elixir Project
+description: Checks out the code, configures Elixir, fetches dependencies, and manages build caching.
+
+inputs:
+  # Required inputs
+  elixir-version:
+    required: true
+    type: string
+    description: Elixir version to set up
+  otp-version:
+    required: true
+    type: string
+    description: OTP version to set up
+  # Enable if using private GitHub repository dependencies
+  # ssh-service-account-key:
+  #   required: true
+  #   type: string
+  #   description: The SSH account key required to fetch private Git dependencies
+
+  # Optional inputs with reasonable defaults
+  compile:
+    required: false
+    type: boolean
+    default: true
+    description: True if we should compile the application itself
+  build-flags:
+    required: false
+    type: string
+    default: '--all-warnings --warnings-as-errors'
+    description: Flags to pass to mix compile
+  install-rebar:
+    required: false
+    type: boolean
+    default: true
+    description: By default, we will install Rebar (mix local.rebar --force).
+  install-hex:
+    required: false
+    type: boolean
+    default: true
+    description: By default, we will install Hex (mix local.hex --force).
+  cache-key:
+    required: false
+    type: string
+    default: 'v1'
+    description: If you need to reset the cache for any reason, change this key.
+  working-directory:
+    required: false
+    type: string
+    default: .
+    description: The working directory for all commands in this Action
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Elixir
+      uses: erlef/setup-beam@v1
+      with:
+        elixir-version: ${{ inputs.elixir-version }}
+        otp-version: ${{ inputs.otp-version }}
+
+    - name: Get build cache
+      uses: actions/cache@v3
+      id: build-cache
+      with:
+        path: |
+          ${{ inputs.working-directory }}/_build/${{ env.MIX_ENV }}/
+          ${{ inputs.working }}/deps/
+        key: build-${{ inputs.cache-key }}-${{ runner.os }}-${{ inputs.otp-version }}-${{ inputs.elixir-version }}-${{ env.MIX_ENV }}-${{ hashFiles('**/mix.lock') }}
+        restore-keys: |
+          build-${{ inputs.cache-key }}-${{ runner.os }}-${{ inputs.otp-version }}-${{ inputs.elixir-version }}-${{ env.MIX_ENV }}-
+
+    - name: Clean to rule out incremental build as a source of flakiness
+      if: github.run_attempt != '1'
+      run: |
+        mix deps.clean --all
+        mix clean
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: Install Rebar
+      if: inputs.install-rebar == 'true'
+      run: mix local.rebar --force
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: Install Hex
+      if: inputs.install-hex == 'true'
+      run: mix local.hex --force
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: Install dependencies
+      if: steps.build-cache.outputs.cache-hit != 'true'
+      run: |
+        # Uncomment if using private GitHub repositories as Mix dependencies
+        # eval `ssh-agent -s`
+        # ssh-add - <<< '${{ inputs.ssh-service-account-key }}'
+        mix deps.get
+      shell: bash # bash is required for "<<<" redirection syntax
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: Compile Dependencies
+      if: inputs.deps-compile == 'true'
+      run: mix deps.compile
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: Compile Application
+      if: inputs.compile == 'true'
+      run: mix compile ${{ inputs.build-flags }}
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}

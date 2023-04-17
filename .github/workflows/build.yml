@@ -1,4 +1,4 @@
-name: Test
+name: Build UI
 
 on:
   pull_request:
@@ -7,43 +7,36 @@ jobs:
   test-ui:
     name: Test UI
     runs-on: ubuntu-22.04
-    strategy:
-      matrix:
-        elixir: ["1.14.4"]
-        otp: ["25.0.2"]
     defaults:
       run:
         shell: bash
     env:
       MIX_ENV: test
+      elixir-version: "1.14.4"
+      otp-version: "25.3"
+
     steps:
       - uses: actions/checkout@v3
 
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: ${{ matrix.elixir }}
-          otp-version: ${{ matrix.otp }}
-
-      # - name: Install system tools
-      #   run: |
-      #     sudo apt update
-      #     sudo apt install -y \
-      #       libmnl-dev
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
 
       - name: Compile UI
         uses: ./.github/actions/elixir-setup
         with:
-          elixir-version: ${{ matrix.elixir }}
-          otp-version: ${{ matrix.otp }}
+          elixir-version: ${{ env.elixir-version }}
+          otp-version: ${{ env.otp-version }}
           working-directory: ui
 
-      - name: Check formatting
+      - name: Check formatting (UI)
         working-directory: ui
         if: always()
         run: mix format --check-formatted
 
-      - name: Run tests
+      - name: Run tests (UI)
         working-directory: ui
         if: always()
         run: mix test --warnings-as-errors

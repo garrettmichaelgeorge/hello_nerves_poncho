@@ -33,7 +33,7 @@ defmodule Firmware.MixProject do
       # Dependencies for all targets
       {:nerves, "~> 1.9.0", runtime: false},
       {:shoehorn, "~> 0.9.0"},
-      {:ring_logger, "~> 0.8.1"},
+      {:ring_logger, "~> 0.10.0"},
       {:toolshed, "~> 0.3.1"},
       {:erlport, "~> 0.10"},
 

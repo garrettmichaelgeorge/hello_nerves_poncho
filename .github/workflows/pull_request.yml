@@ -24,24 +24,24 @@ jobs:
           elixir-version: ${{ env.elixir-version }}
           otp-version: ${{ env.otp-version }}
 
-      - name: Compile UI
+      - name: Build
         uses: ./.github/actions/elixir-setup
         with:
           elixir-version: ${{ env.elixir-version }}
           otp-version: ${{ env.otp-version }}
           working-directory: ui
 
-      - name: Check formatting (UI)
+      - name: Check formatting
         working-directory: ui
         if: always()
         run: mix format --check-formatted
 
-      - name: Check formatting (UI)
+      - name: Credo
         working-directory: ui
         if: always()
         run: mix credo suggest
 
-      - name: Run tests (UI)
+      - name: Run tests
         working-directory: ui
         if: always()
         run: mix test --warnings-as-errors
@@ -66,24 +66,24 @@ jobs:
           elixir-version: ${{ env.elixir-version }}
           otp-version: ${{ env.otp-version }}
 
-      - name: Compile Firmware
+      - name: Compile
         uses: ./.github/actions/elixir-setup
         with:
           elixir-version: ${{ env.elixir-version }}
           otp-version: ${{ env.otp-version }}
           working-directory: firmware
 
-      - name: Check formatting (Firmware)
+      - name: Check formatting
         working-directory: firmware
         if: always()
         run: mix format --check-formatted
 
-      - name: Check formatting (Firmware)
+      - name: Lint with Credo
         working-directory: firmware
         if: always()
         run: mix credo suggest
 
-      - name: Run tests (Firmware)
+      - name: Run tests
         working-directory: firmware
         if: always()
         run: mix test --warnings-as-errors

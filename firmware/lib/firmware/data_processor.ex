@@ -1,4 +1,8 @@
 defmodule Firmware.DataProcessor do
+  @moduledoc """
+  Processes data and returns the result. Internally, communicates with an
+  external Python process to compute the result.
+  """
   use Supervisor
   alias Firmware.DataProcessor.Worker
 

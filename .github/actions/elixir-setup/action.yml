@@ -23,6 +23,11 @@ inputs:
     type: boolean
     default: true
     description: True if we should compile the application itself
+  deps-compile:
+    required: false
+    type: boolean
+    default: true
+    description: True if we should compile dependencies
   build-flags:
     required: false
     type: string

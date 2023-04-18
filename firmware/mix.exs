@@ -46,6 +46,9 @@ defmodule Firmware.MixProject do
       {:ui, path: "../ui", env: Mix.env()},
       {:python_algo, path: "../python_algo"},
 
+      # Dependencies for host only
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+
       # Dependencies for specific targets
       # NOTE: It's generally low risk and recommended to follow minor version
       # bumps to Nerves systems. Since these include Linux kernel and Erlang

@@ -83,6 +83,11 @@ jobs:
         if: always()
         run: mix credo suggest
 
+      # TODO: do this declaratively utilizing e.g. Poetry
+      - name: Install Python deps
+        working-directory: firmware
+        run: pip3 install numpy
+
       - name: Run tests
         working-directory: firmware
         if: always()

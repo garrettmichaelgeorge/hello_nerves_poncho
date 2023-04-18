@@ -1,4 +1,11 @@
 defmodule Firmware.MigrationHelpers do
+  @moduledoc """
+  API for easily running Ecto migrations inside a release.
+
+  ## Examples
+
+      iex> Firmware.MigrationHelpers.migrate
+  """
   @app :ui
 
   def migrate() do

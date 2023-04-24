@@ -12,7 +12,7 @@ python = ">=3.9,<3.12"
 numpy = "^1.23.1"
 
 [tool.poetry.dev-dependencies]
-black = "^22.10.0"
+black = "^23.3.0"
 bandit = "^1.7.5"
 flake8 = "^5.0.0"
 flake8-eradicate = "^1.4.0"
